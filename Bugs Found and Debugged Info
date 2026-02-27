@@ -1,0 +1,74 @@
+---
+
+## Bugs Identified & Fixes Implemented
+
+### 1. LLM Provider Not Specified
+**Issue:**  
+LiteLLM was throwing error:  
+`LLM Provider NOT provided`
+
+**Fix:**  
+Updated model name to use Groq-compatible format and configured base_url correctly:
+base_url="https://api.groq.com/openai/v1"
+model="groq/llama-3.1-8b-instant"
+
+---
+
+### 2. Token Limit (Rate Limit Exceeded)
+**Issue:**  
+Groq TPM limit exceeded due to large document prompts.
+
+**Fix:**  
+- Reduced prompt size
+- Removed unnecessary verbosity
+- Controlled structured JSON output
+
+---
+
+### 3. Hallucinated / Fabricated Data
+**Issue:**  
+Model was generating assumed revenue breakdown and fake metrics.
+
+**Fix:**  
+Added strict prompt rules:
+- Do NOT fabricate missing data
+- Explicitly return "Not Provided"
+- Perform calculations only if sufficient data exists
+
+---
+
+### 4. Unstructured Output
+**Issue:**  
+Output was returning paragraphs instead of structured format.
+
+**Fix:**  
+Implemented strict JSON enforcement with defined schema template.
+
+---
+
+### 5. CrewAI Thought-Only Output
+**Issue:**  
+Model returned: `"Thought: I now can give a great answer"`
+
+**Fix:**  
+Refined prompt to force structured JSON and disable reasoning verbosity.
+
+---
+
+### 6. Telemetry Connection Error
+**Issue:**  
+CrewAI telemetry failing with:
+`telemetry.crewai.com getaddrinfo failed`
+
+**Fix:**  
+Disabled telemetry to prevent runtime interruption.
+
+---
+
+## Final Improvements
+
+- Structured deterministic JSON output
+- Controlled hallucination
+- Production-ready FastAPI endpoint
+- Error handling for API failures
+- Clean repository with .gitignore
